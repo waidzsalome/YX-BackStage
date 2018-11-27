@@ -1,10 +1,10 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { Table, Button, Modal, Form, Input } from 'antd'
-import styles from '../../../routes/Manage/Tab/tab.less'
 
 const FormItem = Form.Item
 
 @Form.create()
+
 class Tab extends Component {
 
   constructor (props) {
