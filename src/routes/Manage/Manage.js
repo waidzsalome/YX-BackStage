@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Layout, Menu, Icon } from 'antd'
-import Content from './SecondRouter'
+ import Sec from './SecondRouter'
 import styles from '../../routes/Manage/Manage.less'
 
-const {Header, Sider, Footer} = Layout
+const {Header, Sider, Footer, Content} = Layout
 
 class Manage extends Component {
 
@@ -21,18 +21,16 @@ class Manage extends Component {
 
   render () {
     return (
-      <Layout className={styles.ContainAll}>
+      <Layout style={{color:'red'}}>
         <Sider
-          // breakpoint="lg"
-          // collapsedWidth="0"
-          // onBreakpoint={(broken) => { console.log(broken); }}
-          // onCollapse={(collapsed, type) => { console.log(collapsed, type); }}
+        style={{
+          overflow: 'auto', height: '100vh', position: 'fixed', left: 0,
+        }}
           collapsible
           collapsed={this.state.collapsed}
           onCollapse={this.onCollapse}
         >
           <div className={styles.logo}>
-
             {this.state.collapsed ? <Icon type="smile" /> : <span>云想后台管理系统</span>}
           </div>
           <Menu theme="dark" mode="inline" defaultSelectedKeys={['4']}>
@@ -69,17 +67,20 @@ class Manage extends Component {
 
         </Sider>
 
-        <Layout>
-          <Header style={{background: '#fff', padding: 0}} />
-
-          <Content />
-
-          <Footer style={{textAlign: 'center'}}>
-            Ant Design ©2018 Created by Ant UED
+        <Layout style={{marginLeft: 200}}>
+          <Header style={{background: '#fff', padding: 0 }} />
+          <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
+            <div style={{ padding: 24, background: '#fff', textAlign: 'center' }}>
+              <Sec/>
+            </div>
+          </Content>
+          <Footer className={styles.footer}>
+            云想 ©2018 Created by Ant UED
           </Footer>
         </Layout>
 
       </Layout>
+
     )
   }
 }

@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
-import { Table, Button, Modal, Form, Input } from 'antd'
+import { Table, Button, Modal, Form, Input,message } from 'antd'
+import styles from '../../../routes/Manage/Tab/tab.less'
+import axios from 'axios'
 
 const FormItem = Form.Item
 
@@ -10,15 +12,12 @@ class Tab extends Component {
   constructor (props) {
     super(props)
     this.columns = [{
-      title: 'TabId',
-      dataIndex: 'TabId',
+      title: 'id',
+      dataIndex: 'id',
       width: '30%',
     }, {
-      title: 'age',
-      dataIndex: 'age',
-    }, {
-      title: 'TabContent',
-      dataIndex: 'TabContent',
+      title: 'title',
+      dataIndex: 'title',
     }, {
       title: 'operation',
       dataIndex: 'operation',
@@ -29,27 +28,24 @@ class Tab extends Component {
         )
       },
     }]
-
     this.state = {
-      dataSource: [{
-        key: '1',
-        TabId: 'John Brown',
-        age: 32,
-        TabContent: 'New York No. 1 Lake Park',
-      }, {
-        key: '2',
-        TabId: 'Jim Green',
-        age: 42,
-        TabContent: 'London No. 1 Lake Park',
-      }, {
-        key: '3',
-        TabId: 'Joe Black',
-        age: 32,
-        TabContent: 'Sidney No. 1 Lake Park',
-      }],
+      dataSource: [],
       visible: false,
       tmp: ''
     }
+  }
+
+  componentDidMount () {
+    axios({
+      method: 'GET',
+      url: 'http://cloudthink.elatis.cn/config/app/get/news_tab'
+    }).then(res=>{
+      console.log('suc',res.data.data.tab_list)
+      this.setState({
+        dataSource: [...res.data.data.tab_list],
+      })
+      console.log('data',this.state.dataSource)
+    })
   }
 
   showModal = (key) => {
@@ -57,7 +53,6 @@ class Tab extends Component {
       visible: true,
       tmp: key
     })
-    console.log('eeee', this.state.dataSource[0])
   }
 
   handleOk = (e) => {
@@ -87,15 +82,35 @@ class Tab extends Component {
 
   handleSave = (bc, ac) => {
     const newData = [...this.state.dataSource]
-    // console.log('data', bc, ac)
-    // console.log('data',newData[bc-1].TabContent)
-    // console.log('item', item, typeof (item))
-    newData[bc-1].TabContent = ac
-    // console.log('res',newData)
+    newData[bc-1].title = ac
     this.setState({
       dataSource: newData
     })
 
+  }
+
+  handleSubmit = () => {
+    console.log('data',this.state.dataSource)
+    const All = {
+      type: "news_tab",
+      data: {
+        tab_list: [...this.state.dataSource]
+      }
+    }
+    axios({
+      method: 'POST',
+      headers:{
+        "Content-Type": "application/json"
+      },
+      url:'http://cloudthink.elatis.cn/config/app/update',
+      data: JSON.stringify(All)
+    }).then( res => {
+      console.log('suc',res)
+      message.success('提交成功')
+    }).catch(err => {
+      console.log('err',err)
+      message.error('提交失败')
+    })
   }
 
   render () {
@@ -120,7 +135,10 @@ class Tab extends Component {
             </FormItem>
           </Form>
         </Modal>
-        <Button>提交</Button>
+        <div className={styles.submitButton}>
+        <Button onClick={this.handleSubmit}>提交</Button>
+          <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+      </div>
       </div>
     )
   }
